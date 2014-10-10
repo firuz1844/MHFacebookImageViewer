@@ -32,12 +32,14 @@ CGFloat kMinBlackMaskAlpha = 0.3f;
 CGFloat kMaxImageScale = 2.5f;
 CGFloat kMinImageScale = 1.0f;
 
+static NSString * cellID = @"mhfacebookImageViewerCell";
 
 
-@interface MHFacebookImageViewer()<UIGestureRecognizerDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>{
+@interface MHFacebookImageViewer() <UIGestureRecognizerDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
+{
     NSMutableArray *_gestures;
 
-    UITableView * _tableView;
+    UICollectionView * _collectionView;
     UIView *_blackMask;
     UIImageView * _imageView;
     UIButton * _doneButton;
@@ -55,6 +57,7 @@ CGFloat kMinImageScale = 1.0f;
 @end
 
 @implementation MHFacebookImageViewer
+
 @synthesize rootViewController = _rootViewController;
 @synthesize imageURL = _imageURL;
 @synthesize openingBlock = _openingBlock;
@@ -62,25 +65,76 @@ CGFloat kMinImageScale = 1.0f;
 @synthesize senderView = _senderView;
 @synthesize initialIndex = _initialIndex;
 
-#pragma mark - TableView datasource
-- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    _statusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+    [UIApplication sharedApplication].statusBarHidden = YES;
+    CGRect windowBounds = [[UIScreen mainScreen] bounds];
+    
+    // Compute Original Frame Relative To Screen
+    CGRect newFrame = [_senderView convertRect:windowBounds toView:nil];
+    newFrame.origin = CGPointMake(newFrame.origin.x, newFrame.origin.y);
+    newFrame.size = _senderView.frame.size;
+    _originalFrameRelativeToScreen = newFrame;
+    
+    // Add a CollectionView
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    [flowLayout setItemSize:CGSizeMake(200, 200)];
+    [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    
+    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:flowLayout];
+    [_collectionView registerClass:[MHFacebookImageViewerCell class] forCellWithReuseIdentifier:cellID];
+    
+    [self.view addSubview:_collectionView];
+    
+    _collectionView.pagingEnabled = YES;
+    _collectionView.dataSource = self;
+    _collectionView.delegate = self;
+    _collectionView.backgroundColor = [UIColor clearColor];
+    _collectionView.delaysContentTouches = YES;
+    [_collectionView setShowsVerticalScrollIndicator:NO];
+    [_collectionView setContentOffset:CGPointMake(0, _initialIndex * windowBounds.size.width)];
+    
+    _blackMask = [[UIView alloc] initWithFrame:windowBounds];
+    _blackMask.backgroundColor = [UIColor blackColor];
+    _blackMask.alpha = 0.0f;
+    _blackMask.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
+    [self.view insertSubview:_blackMask atIndex:0];
+    
+    _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_doneButton setImageEdgeInsets:UIEdgeInsetsMake(-10, -10, -10, -10)];  // make click area bigger
+    [_doneButton setImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
+    _doneButton.frame = CGRectMake(windowBounds.size.width - (51.0f + 9.0f),15.0f, 51.0f, 26.0f);
+    
+}
+
+#pragma mark - CollectionView datasource
+- (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Just to retain the old version
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     if(!self.imageDatasource) return 1;
     return [self.imageDatasource numberImagesForImageViewer:self];
 }
 
-- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-    static NSString * cellID = @"mhfacebookImageViewerCell";
-    MHFacebookImageViewerCell * imageViewerCell = [tableView dequeueReusableCellWithIdentifier:cellID];
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(200, 200);
+}
+
+- (UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MHFacebookImageViewerCell * imageViewerCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     if(!imageViewerCell) {
-        CGRect windowFrame = [[UIScreen mainScreen] bounds];
-        imageViewerCell = [[MHFacebookImageViewerCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
-        imageViewerCell.transform = CGAffineTransformMakeRotation(M_PI_2);
-        imageViewerCell.frame = CGRectMake(0,0,windowFrame.size.width, windowFrame.size.height);
+//        CGRect windowFrame = [[UIScreen mainScreen] bounds];
+        imageViewerCell = [[MHFacebookImageViewerCell alloc] initWithFrame:self.view.frame];
+//        imageViewerCell.transform = CGAffineTransformMakeRotation(M_PI_2);
+//        imageViewerCell.frame = CGRectMake(0,0,windowFrame.size.width, windowFrame.size.height);
         imageViewerCell.originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
         imageViewerCell.viewController = self;
         imageViewerCell.blackMask = _blackMask;
@@ -104,10 +158,6 @@ CGFloat kMinImageScale = 1.0f;
     return imageViewerCell;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return _rootViewController.view.bounds.size.width;
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -117,54 +167,11 @@ CGFloat kMinImageScale = 1.0f;
     return self;
 }
 
-- (void)loadView
-{
-    _statusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
-    [UIApplication sharedApplication].statusBarHidden = YES;
-    CGRect windowBounds = [[UIScreen mainScreen] bounds];
-
-    // Compute Original Frame Relative To Screen
-    CGRect newFrame = [_senderView convertRect:windowBounds toView:nil];
-    newFrame.origin = CGPointMake(newFrame.origin.x, newFrame.origin.y);
-    newFrame.size = _senderView.frame.size;
-    _originalFrameRelativeToScreen = newFrame;
-
-    self.view = [[UIView alloc] initWithFrame:windowBounds];
-    //    NSLog(@"WINDOW :%@",NSStringFromCGRect(windowBounds));
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    // Add a Tableview
-    _tableView = [[UITableView alloc]initWithFrame:windowBounds style:UITableViewStylePlain];
-    [self.view addSubview:_tableView];
-    //rotate it -90 degrees
-    _tableView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    _tableView.frame = CGRectMake(0,0,windowBounds.size.width,windowBounds.size.height);
-    _tableView.pagingEnabled = YES;
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.backgroundColor = [UIColor clearColor];
-    _tableView.delaysContentTouches = YES;
-    [_tableView setShowsVerticalScrollIndicator:NO];
-    [_tableView setContentOffset:CGPointMake(0, _initialIndex * windowBounds.size.width)];
-
-    _blackMask = [[UIView alloc] initWithFrame:windowBounds];
-    _blackMask.backgroundColor = [UIColor blackColor];
-    _blackMask.alpha = 0.0f;
-    _blackMask.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [
-     self.view insertSubview:_blackMask atIndex:0];
-
-    _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_doneButton setImageEdgeInsets:UIEdgeInsetsMake(-10, -10, -10, -10)];  // make click area bigger
-    [_doneButton setImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
-    _doneButton.frame = CGRectMake(windowBounds.size.width - (51.0f + 9.0f),15.0f, 51.0f, 26.0f);
-}
-
 #pragma mark - Show
 - (void)presentFromRootViewController
 {
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    [rootViewController presentViewController:self animated:YES completion:^{}];
     [self presentFromViewController:rootViewController];
 }
 

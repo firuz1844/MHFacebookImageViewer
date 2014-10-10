@@ -12,7 +12,7 @@ typedef void (^MHFacebookImageViewerClosingBlock)(void);
 
 #import <UIKit/UIKit.h>
 
-@interface MHFacebookImageViewerCell : UITableViewCell<UIGestureRecognizerDelegate,UIScrollViewDelegate>{
+@interface MHFacebookImageViewerCell : UICollectionViewCell <UIGestureRecognizerDelegate,UIScrollViewDelegate>{
     UIImageView * __imageView;
     UIScrollView * __scrollView;
     NSMutableArray *_gestures;

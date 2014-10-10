@@ -31,7 +31,7 @@
 @synthesize panGesture = _panGesture;
 
 - (void) loadAllRequiredViews{
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
+
     CGRect frame = [UIScreen mainScreen].bounds;
     __scrollView = [[UIScrollView alloc]initWithFrame:frame];
     __scrollView.delegate = self;

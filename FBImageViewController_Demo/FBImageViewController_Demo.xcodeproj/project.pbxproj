@@ -50,6 +50,9 @@
 		99872559175886D6004FDBC5 /* Done@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 99872557175886D6004FDBC5 /* Done@2x.png */; };
 		99ADA7C61759989C0044BAE4 /* Demo2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99ADA7C51759989C0044BAE4 /* Demo2ViewController.m */; };
 		99ADA7C917599E830044BAE4 /* Demo3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99ADA7C817599E830044BAE4 /* Demo3ViewController.m */; };
+		9A450B5719E876F800BB4937 /* MHFacebookImageViewerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A450B5219E876F800BB4937 /* MHFacebookImageViewerCell.m */; };
+		9A450B5819E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A450B5419E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.m */; };
+		9A450B5919E876F800BB4937 /* UIImageView+MHFacebookImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A450B5619E876F800BB4937 /* UIImageView+MHFacebookImageViewer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,6 +128,12 @@
 		99ADA7C51759989C0044BAE4 /* Demo2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo2ViewController.m; sourceTree = "<group>"; };
 		99ADA7C717599E830044BAE4 /* Demo3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo3ViewController.h; sourceTree = "<group>"; };
 		99ADA7C817599E830044BAE4 /* Demo3ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo3ViewController.m; sourceTree = "<group>"; };
+		9A450B5119E876F800BB4937 /* MHFacebookImageViewerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHFacebookImageViewerCell.h; sourceTree = "<group>"; };
+		9A450B5219E876F800BB4937 /* MHFacebookImageViewerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHFacebookImageViewerCell.m; sourceTree = "<group>"; };
+		9A450B5319E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHFacebookImageViewerTapGestureRecognizer.h; sourceTree = "<group>"; };
+		9A450B5419E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHFacebookImageViewerTapGestureRecognizer.m; sourceTree = "<group>"; };
+		9A450B5519E876F800BB4937 /* UIImageView+MHFacebookImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+MHFacebookImageViewer.h"; sourceTree = "<group>"; };
+		9A450B5619E876F800BB4937 /* UIImageView+MHFacebookImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+MHFacebookImageViewer.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,9 +277,15 @@
 		9987252B1757B035004FDBC5 /* MHFBImageViewController */ = {
 			isa = PBXGroup;
 			children = (
-				99872555175886D6004FDBC5 /* Resources */,
 				9987252C1757B035004FDBC5 /* MHFacebookImageViewer.h */,
 				9987252D1757B035004FDBC5 /* MHFacebookImageViewer.m */,
+				9A450B5119E876F800BB4937 /* MHFacebookImageViewerCell.h */,
+				9A450B5219E876F800BB4937 /* MHFacebookImageViewerCell.m */,
+				9A450B5319E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.h */,
+				9A450B5419E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.m */,
+				9A450B5519E876F800BB4937 /* UIImageView+MHFacebookImageViewer.h */,
+				9A450B5619E876F800BB4937 /* UIImageView+MHFacebookImageViewer.m */,
+				99872555175886D6004FDBC5 /* Resources */,
 			);
 			name = MHFBImageViewController;
 			path = ../../MHFBImageViewController;
@@ -425,16 +440,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A450B5819E876F800BB4937 /* MHFacebookImageViewerTapGestureRecognizer.m in Sources */,
 				998724FD1757AFFE004FDBC5 /* main.m in Sources */,
 				998725011757AFFE004FDBC5 /* AppDelegate.m in Sources */,
 				9987252E1757B035004FDBC5 /* MHFacebookImageViewer.m in Sources */,
 				998725311757B0AE004FDBC5 /* DemoViewController.m in Sources */,
+				9A450B5919E876F800BB4937 /* UIImageView+MHFacebookImageViewer.m in Sources */,
 				99ADA7C61759989C0044BAE4 /* Demo2ViewController.m in Sources */,
 				99ADA7C917599E830044BAE4 /* Demo3ViewController.m in Sources */,
 				995424481766CB7500D7A4D1 /* AFHTTPClient.m in Sources */,
 				995424491766CB7500D7A4D1 /* AFHTTPRequestOperation.m in Sources */,
 				9954244A1766CB7500D7A4D1 /* AFImageRequestOperation.m in Sources */,
 				9954244B1766CB7500D7A4D1 /* AFJSONRequestOperation.m in Sources */,
+				9A450B5719E876F800BB4937 /* MHFacebookImageViewerCell.m in Sources */,
 				9954244C1766CB7500D7A4D1 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				9954244D1766CB7500D7A4D1 /* AFPropertyListRequestOperation.m in Sources */,
 				9954244E1766CB7500D7A4D1 /* AFURLConnectionOperation.m in Sources */,
@@ -514,7 +532,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -538,7 +556,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -551,7 +569,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FBImageViewController_Demo/FBImageViewController_Demo-Prefix.pch";
 				INFOPLIST_FILE = "FBImageViewController_Demo/FBImageViewController_Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -563,7 +581,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FBImageViewController_Demo/FBImageViewController_Demo-Prefix.pch";
 				INFOPLIST_FILE = "FBImageViewController_Demo/FBImageViewController_Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
