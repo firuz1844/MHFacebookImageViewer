@@ -24,9 +24,16 @@
 
 
 #import <UIKit/UIKit.h>
+#import "MHFacebookImageViewerCell.h"
+#import "MHFacebookImageViewerTapGestureRecognizer.h"
+#import "UIImageView+MHFacebookImageViewer.h"
+#import "UIImageView+AFNetworking.h"
 
-typedef void (^MHFacebookImageViewerOpeningBlock)(void);
-typedef void (^MHFacebookImageViewerClosingBlock)(void);
+extern NSInteger kDismissGestureSensitivity;
+extern CGFloat kMaxBlackMaskAlpha;
+extern CGFloat kMinBlackMaskAlpha;
+extern CGFloat kMaxImageScale;
+extern CGFloat kMinImageScale;
 
 
 @class MHFacebookImageViewer;
@@ -49,16 +56,5 @@ typedef void (^MHFacebookImageViewerClosingBlock)(void);
 
 - (void)presentFromRootViewController;
 - (void)presentFromViewController:(UIViewController *)controller;
-@end
 
-#pragma mark - UIImageView Category
-
-@interface UIImageView(MHFacebookImageViewer)
-- (void) setupImageViewer;
-- (void) setupImageViewerWithCompletionOnOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close;
-- (void) setupImageViewerWithImageURL:(NSURL*)url;
-- (void) setupImageViewerWithImageURL:(NSURL *)url onOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close;
-- (void) setupImageViewerWithDatasource:(id<MHFacebookImageViewerDatasource>)imageDatasource onOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close;
-- (void) setupImageViewerWithDatasource:(id<MHFacebookImageViewerDatasource>)imageDatasource initialIndex:(NSInteger)initialIndex onOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close;
-- (void)removeImageViewer;
 @end
