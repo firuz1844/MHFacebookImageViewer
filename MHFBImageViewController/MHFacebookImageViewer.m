@@ -130,9 +130,12 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 - (UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MHFacebookImageViewerCell * imageViewerCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
+    [imageViewerCell loadAllRequiredViews];
+
     if(!imageViewerCell) {
 //        CGRect windowFrame = [[UIScreen mainScreen] bounds];
         imageViewerCell = [[MHFacebookImageViewerCell alloc] initWithFrame:self.view.frame];
+        imageViewerCell.backgroundColor = [UIColor redColor];
 //        imageViewerCell.transform = CGAffineTransformMakeRotation(M_PI_2);
 //        imageViewerCell.frame = CGRectMake(0,0,windowFrame.size.width, windowFrame.size.height);
         imageViewerCell.originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
@@ -172,7 +175,9 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 {
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     [rootViewController presentViewController:self animated:YES completion:^{}];
-    [self presentFromViewController:rootViewController];
+//    [self presentFromViewController:rootViewController];
+    sleep(2);
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (void)presentFromViewController:(UIViewController *)controller

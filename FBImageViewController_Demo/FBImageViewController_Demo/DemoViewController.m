@@ -98,7 +98,7 @@
 
 - (UIImage*) imageDefaultAtIndex:(NSInteger)index imageViewer:(MHFacebookImageViewer *)imageViewer{
     NSLog(@"INDEX IS %i",index);
-    return [UIImage imageNamed:[NSString stringWithFormat:@"%i_iphone",index]];
+    return [UIImage imageNamed:@"Done"];
 }
 
 @end

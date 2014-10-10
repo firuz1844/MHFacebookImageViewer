@@ -35,7 +35,7 @@
     CGRect frame = [UIScreen mainScreen].bounds;
     __scrollView = [[UIScrollView alloc]initWithFrame:frame];
     __scrollView.delegate = self;
-    __scrollView.backgroundColor = [UIColor clearColor];
+    __scrollView.backgroundColor = [UIColor greenColor];
     [self addSubview:__scrollView];
     [_doneButton addTarget:self
                     action:@selector(close:)
@@ -64,6 +64,7 @@
         
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         NSLog(@"Image From URL Not loaded");
+        [__imageView setImage:[UIImage imageNamed:@"Done"]];
     }];
     
     if(_imageIndex==_initialIndex && !_isLoaded){
