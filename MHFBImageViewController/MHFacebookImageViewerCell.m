@@ -29,6 +29,16 @@
 @synthesize defaultImage = _defaultImage;
 @synthesize initialIndex = _initialIndex;
 @synthesize panGesture = _panGesture;
+@synthesize collectionView = _collectionView;
+
+
+- (id) initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        NSLog(@"NewCell %@", self.description);
+    }
+    return self;
+}
 
 - (void) loadAllRequiredViews{
     
@@ -63,8 +73,8 @@
         _imageViewInTheBlock.frame = [_justMeInsideTheBlock centerFrameFromImage:_imageViewInTheBlock.image];
         
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-        NSLog(@"Image From URL Not loaded");
-        [_imageViewInTheBlock setImage:[UIImage imageNamed:@"Done"]];
+//        NSLog(@"Image From URL Not loaded");
+        [_imageViewInTheBlock setImage:[UIImage imageNamed:@"placeholder"]];
     }];
     
     if(_imageIndex==_initialIndex && !_isLoaded){
@@ -99,10 +109,7 @@
     _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerDidPan:)];
     _panGesture.cancelsTouchesInView = NO;
     _panGesture.delegate = self;
-    UICollectionView * superCollectionView = (UICollectionView*) [[[view superview] superview] superview];
-    if ([superCollectionView isKindOfClass:[UICollectionView class]]) {
-        [superCollectionView.panGestureRecognizer requireGestureRecognizerToFail:_panGesture];
-    }
+    [_collectionView.panGestureRecognizer requireGestureRecognizerToFail:_panGesture];
     [view addGestureRecognizer:_panGesture];
     [_gestures addObject:_panGesture];
     

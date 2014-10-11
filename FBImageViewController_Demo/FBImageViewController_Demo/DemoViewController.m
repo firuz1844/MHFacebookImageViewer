@@ -54,6 +54,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    NSLog(@"Rotate demo");
+}
 
 #pragma mark - Table view data source
 
@@ -79,9 +82,9 @@
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     
     [imageView setupImageViewerWithDatasource:self initialIndex:indexPath.row onOpen:^{
-              NSLog(@"OPEN!");
+//              NSLog(@"OPEN!");
     } onClose:^{
-          NSLog(@"CLOSE!");
+//          NSLog(@"CLOSE!");
     }];
     
     imageView.clipsToBounds = YES;
@@ -93,12 +96,12 @@
 }
 
 -  (NSURL*) imageURLAtIndex:(NSInteger)index imageViewer:(MHFacebookImageViewer *)imageViewer {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"http://iamkel.net/projects/mhfacebookimageviewer/%i.png",index]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"http://www.picturesnew.com/media/images/image-background.jpg"]];
 }
 
 - (UIImage*) imageDefaultAtIndex:(NSInteger)index imageViewer:(MHFacebookImageViewer *)imageViewer{
-    NSLog(@"INDEX IS %i",index);
-    return [UIImage imageNamed:@"Done"];
+//    NSLog(@"INDEX IS %i",index);
+    return [UIImage imageNamed:@"placeholder"];
 }
 
 @end

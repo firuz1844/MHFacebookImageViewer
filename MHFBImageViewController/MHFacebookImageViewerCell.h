@@ -25,6 +25,7 @@ typedef void (^MHFacebookImageViewerClosingBlock)(void);
 @property(nonatomic,assign) CGRect originalFrameRelativeToScreen;
 @property(nonatomic,weak) UIViewController * rootViewController;
 @property(nonatomic,weak) UIViewController * viewController;
+@property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,weak) UIView * blackMask;
 @property(nonatomic,weak) UIButton * doneButton;
 @property(nonatomic,weak) UIImageView * senderView;

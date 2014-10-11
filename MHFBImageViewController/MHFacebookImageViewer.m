@@ -38,19 +38,19 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 @interface MHFacebookImageViewer() <UIGestureRecognizerDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 {
     NSMutableArray *_gestures;
-
+    
     UICollectionView * _collectionView;
     UIView *_blackMask;
     UIImageView * _imageView;
     UIButton * _doneButton;
     UIView * _superView;
-
+    
     CGPoint _panOrigin;
     CGRect _originalFrameRelativeToScreen;
-
+    
     BOOL _isAnimating;
     BOOL _isDoneAnimating;
-
+    
     UIStatusBarStyle _statusBarStyle;
 }
 
@@ -81,10 +81,12 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     
     // Add a CollectionView
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setItemSize:self.view.frame.size];
+    //    [flowLayout setItemSize:self.view.frame.size];
+    flowLayout.minimumInteritemSpacing = 0;
+    flowLayout.minimumLineSpacing = 0;
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     
-    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:flowLayout];
+    _collectionView = [[UICollectionView alloc] initWithFrame:windowBounds collectionViewLayout:flowLayout];
     [_collectionView registerClass:[MHFacebookImageViewerCell class] forCellWithReuseIdentifier:cellID];
     
     [self.view addSubview:_collectionView];
@@ -96,6 +98,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     _collectionView.delaysContentTouches = YES;
     [_collectionView setShowsVerticalScrollIndicator:NO];
     [_collectionView setContentOffset:CGPointMake(0, _initialIndex * windowBounds.size.width)];
+    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     _blackMask = [[UIView alloc] initWithFrame:windowBounds];
     _blackMask.backgroundColor = [UIColor blackColor];
@@ -108,6 +111,11 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     [_doneButton setImageEdgeInsets:UIEdgeInsetsMake(-10, -10, -10, -10)];  // make click area bigger
     [_doneButton setImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
     _doneButton.frame = CGRectMake(windowBounds.size.width - (51.0f + 9.0f),15.0f, 51.0f, 26.0f);
+    
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
 }
 
@@ -124,34 +132,36 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.view.frame.size;
+    CGSize size;
+    if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+        size = self.view.frame.size;
+    } else {
+        size = CGSizeMake(self.view.frame.size.height, self.view.frame.size.width);
+    }
+    return size;
 }
 
 - (UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MHFacebookImageViewerCell * imageViewerCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     [imageViewerCell loadAllRequiredViews];
-
-//    if(!imageViewerCell) {
-////        CGRect windowFrame = [[UIScreen mainScreen] bounds];
-//        imageViewerCell = [[MHFacebookImageViewerCell alloc] initWithFrame:self.view.frame];
-        imageViewerCell.backgroundColor = [UIColor redColor];
-//        imageViewerCell.transform = CGAffineTransformMakeRotation(M_PI_2);
-//        imageViewerCell.frame = CGRectMake(0,0,windowFrame.size.width, windowFrame.size.height);
-        imageViewerCell.originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
-        imageViewerCell.viewController = self;
-        imageViewerCell.blackMask = _blackMask;
-        imageViewerCell.rootViewController = _rootViewController;
-        imageViewerCell.closingBlock = _closingBlock;
-        imageViewerCell.openingBlock = _openingBlock;
-        imageViewerCell.superView = _senderView.superview;
-        imageViewerCell.senderView = _senderView;
-        imageViewerCell.doneButton = _doneButton;
-        imageViewerCell.initialIndex = _initialIndex;
-        imageViewerCell.statusBarStyle = _statusBarStyle;
-        [imageViewerCell loadAllRequiredViews];
-        imageViewerCell.backgroundColor = [UIColor clearColor];
-//    }
+    
+    imageViewerCell.backgroundColor = [UIColor clearColor];
+    imageViewerCell.originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
+    imageViewerCell.viewController = self;
+    imageViewerCell.collectionView = collectionView;
+    
+    imageViewerCell.blackMask = _blackMask;
+    imageViewerCell.rootViewController = _rootViewController;
+    imageViewerCell.closingBlock = _closingBlock;
+    imageViewerCell.openingBlock = _openingBlock;
+    imageViewerCell.superView = _senderView.superview;
+    imageViewerCell.senderView = _senderView;
+    imageViewerCell.doneButton = _doneButton;
+    imageViewerCell.initialIndex = _initialIndex;
+    imageViewerCell.statusBarStyle = _statusBarStyle;
+    [imageViewerCell loadAllRequiredViews];
+    imageViewerCell.backgroundColor = [UIColor clearColor];
     if(!self.imageDatasource) {
         // Just to retain the old version
         [imageViewerCell setImageURL:_imageURL defaultImage:_senderView.image imageIndex:0];
@@ -175,10 +185,31 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 {
     _rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     _rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
-
+    _rootViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    
     [_rootViewController presentViewController:self animated:NO completion:^{}];
-//    [self presentFromViewController:rootViewController];
+    //    [self presentFromViewController:rootViewController];
 }
+
+//- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+//{
+//    return _rootViewController.interfaceOrientation;
+//}
+
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    NSLog(@"Rotate MHF");
+}
+
+//-(BOOL)shouldAutorotate
+//{
+//    return YES;
+//}
+//
+//-(NSUInteger)supportedInterfaceOrientations
+//{
+//    return UIInterfaceOrientationMaskLandscape | UIInterfaceOrientationMaskPortrait;
+//}
 
 - (void)presentFromViewController:(UIViewController *)controller
 {
@@ -193,7 +224,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     _imageURL = nil;
     _senderView = nil;
     _imageDatasource = nil;
-
+    
 }
 
 @end
