@@ -31,11 +31,11 @@
 @synthesize panGesture = _panGesture;
 
 - (void) loadAllRequiredViews{
-
+    
     CGRect frame = [UIScreen mainScreen].bounds;
     __scrollView = [[UIScrollView alloc]initWithFrame:frame];
     __scrollView.delegate = self;
-    __scrollView.backgroundColor = [UIColor greenColor];
+    __scrollView.backgroundColor = [UIColor clearColor];
     [self addSubview:__scrollView];
     [_doneButton addTarget:self
                     action:@selector(close:)
@@ -64,7 +64,7 @@
         
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         NSLog(@"Image From URL Not loaded");
-        [__imageView setImage:[UIImage imageNamed:@"Done"]];
+        [_imageViewInTheBlock setImage:[UIImage imageNamed:@"Done"]];
     }];
     
     if(_imageIndex==_initialIndex && !_isLoaded){
@@ -99,8 +99,10 @@
     _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerDidPan:)];
     _panGesture.cancelsTouchesInView = NO;
     _panGesture.delegate = self;
-    __weak UITableView * weakSuperView = (UITableView*) view.superview.superview.superview.superview.superview;
-    [weakSuperView.panGestureRecognizer requireGestureRecognizerToFail:_panGesture];
+    UICollectionView * superCollectionView = (UICollectionView*) [[[view superview] superview] superview];
+    if ([superCollectionView isKindOfClass:[UICollectionView class]]) {
+        [superCollectionView.panGestureRecognizer requireGestureRecognizerToFail:_panGesture];
+    }
     [view addGestureRecognizer:_panGesture];
     [_gestures addObject:_panGesture];
     
@@ -197,14 +199,17 @@
             _blackMask.alpha = 0.0f;
         } completion:^(BOOL finished) {
             if (finished) {
-                [_viewController.view removeFromSuperview];
-                [_viewController removeFromParentViewController];
-                _senderView.alpha = 1.0f;
-                [UIApplication sharedApplication].statusBarHidden = NO;
-                [UIApplication sharedApplication].statusBarStyle = _statusBarStyle;
-                _isAnimating = NO;
-                if(_closingBlock)
-                    _closingBlock();
+                //                [_viewController.view removeFromSuperview];
+                //                [_viewController removeFromParentViewController];
+                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+                [_viewController dismissViewControllerAnimated:NO completion:^{
+                    _senderView.alpha = 1.0f;
+                    [UIApplication sharedApplication].statusBarHidden = NO;
+                    [UIApplication sharedApplication].statusBarStyle = _statusBarStyle;
+                    _isAnimating = NO;
+                    if(_closingBlock)
+                        _closingBlock();
+                }];
             }
         }];
     });

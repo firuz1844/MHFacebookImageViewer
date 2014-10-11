@@ -27,7 +27,7 @@
 
 ///1 - maximum sensitive, 10 - minimum sensitive
 NSInteger kDismissGestureSensitivity = 3;
-CGFloat kMaxBlackMaskAlpha = 0.9f;
+CGFloat kMaxBlackMaskAlpha = 0.7f;
 CGFloat kMinBlackMaskAlpha = 0.3f;
 CGFloat kMaxImageScale = 2.5f;
 CGFloat kMinImageScale = 1.0f;
@@ -68,7 +68,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor clearColor];
     _statusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     [UIApplication sharedApplication].statusBarHidden = YES;
     CGRect windowBounds = [[UIScreen mainScreen] bounds];
@@ -81,7 +81,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     
     // Add a CollectionView
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setItemSize:CGSizeMake(200, 200)];
+    [flowLayout setItemSize:self.view.frame.size];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:flowLayout];
@@ -124,7 +124,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(200, 200);
+    return self.view.frame.size;
 }
 
 - (UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -132,9 +132,9 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     MHFacebookImageViewerCell * imageViewerCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     [imageViewerCell loadAllRequiredViews];
 
-    if(!imageViewerCell) {
-//        CGRect windowFrame = [[UIScreen mainScreen] bounds];
-        imageViewerCell = [[MHFacebookImageViewerCell alloc] initWithFrame:self.view.frame];
+//    if(!imageViewerCell) {
+////        CGRect windowFrame = [[UIScreen mainScreen] bounds];
+//        imageViewerCell = [[MHFacebookImageViewerCell alloc] initWithFrame:self.view.frame];
         imageViewerCell.backgroundColor = [UIColor redColor];
 //        imageViewerCell.transform = CGAffineTransformMakeRotation(M_PI_2);
 //        imageViewerCell.frame = CGRectMake(0,0,windowFrame.size.width, windowFrame.size.height);
@@ -151,7 +151,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
         imageViewerCell.statusBarStyle = _statusBarStyle;
         [imageViewerCell loadAllRequiredViews];
         imageViewerCell.backgroundColor = [UIColor clearColor];
-    }
+//    }
     if(!self.imageDatasource) {
         // Just to retain the old version
         [imageViewerCell setImageURL:_imageURL defaultImage:_senderView.image imageIndex:0];
@@ -173,11 +173,11 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 #pragma mark - Show
 - (void)presentFromRootViewController
 {
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [rootViewController presentViewController:self animated:YES completion:^{}];
+    _rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    _rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+
+    [_rootViewController presentViewController:self animated:NO completion:^{}];
 //    [self presentFromViewController:rootViewController];
-    sleep(2);
-    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (void)presentFromViewController:(UIViewController *)controller
