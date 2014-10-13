@@ -45,16 +45,15 @@ extern CGFloat kMinImageScale;
 @end
 
 @interface MHFacebookImageViewer : UIViewController
-@property (weak, readonly, nonatomic) UIViewController *rootViewController;
 @property (nonatomic,strong) NSURL * imageURL;
 @property (nonatomic,strong) UIImageView * senderView;
 @property (nonatomic,weak) MHFacebookImageViewerOpeningBlock openingBlock;
 @property (nonatomic,weak) MHFacebookImageViewerClosingBlock closingBlock;
 @property (nonatomic,weak) id<MHFacebookImageViewerDatasource> imageDatasource;
 @property (nonatomic,assign) NSInteger initialIndex;
+@property (nonatomic, strong) UINavigationController *presentingViewController;
 
 
-- (void)presentFromRootViewController;
 - (void)presentFromViewController:(UIViewController *)controller;
 
 @end

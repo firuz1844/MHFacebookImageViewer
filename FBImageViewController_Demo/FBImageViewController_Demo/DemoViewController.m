@@ -83,8 +83,8 @@
     
     [imageView setupImageViewerWithDatasource:self initialIndex:indexPath.row onOpen:^{
 //              NSLog(@"OPEN!");
-    } onClose:^{
-//          NSLog(@"CLOSE!");
+    } onClose:^(int closingIndex){
+        NSLog(@"Closed MHFacebookImageViewer on image index: %d", closingIndex);
     }];
     
     imageView.clipsToBounds = YES;

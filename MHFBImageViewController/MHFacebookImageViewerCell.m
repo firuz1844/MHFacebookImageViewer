@@ -17,8 +17,8 @@
 @implementation MHFacebookImageViewerCell
 
 @synthesize originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
-@synthesize rootViewController = _rootViewController;
 @synthesize viewController = _viewController;
+@synthesize presentingViewController = _presentingViewController;
 @synthesize blackMask = _blackMask;
 @synthesize closingBlock = _closingBlock;
 @synthesize openingBlock = _openingBlock;
@@ -82,9 +82,9 @@
         [UIView animateWithDuration:0.4f delay:0.0f options:0 animations:^{
             __imageView.frame = [self centerFrameFromImage:__imageView.image];
             CGAffineTransform transf = CGAffineTransformIdentity;
-            // Root View Controller - move backward
-            _rootViewController.view.transform = CGAffineTransformScale(transf, 0.95f, 0.95f);
-            // Root View Controller - move forward
+            // Presenting View Controller - move backward
+            _presentingViewController.view.transform = CGAffineTransformScale(transf, 0.95f, 0.95f);
+            // Presenting View Controller - move forward
             //                _viewController.view.transform = CGAffineTransformScale(transf, 1.05f, 1.05f);
             _blackMask.alpha = kMaxBlackMaskAlpha;
         }   completion:^(BOOL finished) {
@@ -202,21 +202,13 @@
                 __imageView.frame = CGRectMake(__imageView.frame.origin.x, isGoingUp?-screenHeight:screenHeight, __imageView.frame.size.width, __imageView.frame.size.height);
             }
             CGAffineTransform transf = CGAffineTransformIdentity;
-            _rootViewController.view.transform = CGAffineTransformScale(transf, 1.0f, 1.0f);
+            _presentingViewController.view.transform = CGAffineTransformScale(transf, 1.0f, 1.0f);
             _blackMask.alpha = 0.0f;
         } completion:^(BOOL finished) {
             if (finished) {
-                //                [_viewController.view removeFromSuperview];
-                //                [_viewController removeFromParentViewController];
-                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-                [_viewController dismissViewControllerAnimated:NO completion:^{
-                    _senderView.alpha = 1.0f;
-                    [UIApplication sharedApplication].statusBarHidden = NO;
-                    [UIApplication sharedApplication].statusBarStyle = _statusBarStyle;
-                    _isAnimating = NO;
-                    if(_closingBlock)
-                        _closingBlock();
-                }];
+                if (![_viewController isKindOfClass:[self class]]) {
+                    [_viewController dismissViewControllerAnimated:NO completion:nil];
+                }
             }
         }];
     });
@@ -226,7 +218,7 @@
 - (CGRect) centerFrameFromImage:(UIImage*) image {
     if(!image) return CGRectZero;
     
-    CGRect windowBounds = _rootViewController.view.bounds;
+    CGRect windowBounds = _presentingViewController.view.bounds;
     CGSize newImageSize = [self imageResizeBaseOnWidth:windowBounds
                            .size.width oldWidth:image
                            .size.width oldHeight:image.size.height];
@@ -244,7 +236,7 @@
 
 # pragma mark - UIScrollView Delegate
 - (void)centerScrollViewContents {
-    CGSize boundsSize = _rootViewController.view.bounds.size;
+    CGSize boundsSize = _presentingViewController.view.bounds.size;
     CGRect contentsFrame = __imageView.frame;
     
     if (contentsFrame.size.width < boundsSize.width) {

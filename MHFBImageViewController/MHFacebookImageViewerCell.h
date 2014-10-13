@@ -8,7 +8,7 @@
 
 
 typedef void (^MHFacebookImageViewerOpeningBlock)(void);
-typedef void (^MHFacebookImageViewerClosingBlock)(void);
+typedef void (^MHFacebookImageViewerClosingBlock)(int);
 
 #import <UIKit/UIKit.h>
 
@@ -23,8 +23,8 @@ typedef void (^MHFacebookImageViewerClosingBlock)(void);
 }
 
 @property(nonatomic,assign) CGRect originalFrameRelativeToScreen;
-@property(nonatomic,weak) UIViewController * rootViewController;
-@property(nonatomic,weak) UIViewController * viewController;
+@property(nonatomic,strong) UIViewController * presentingViewController;
+@property(nonatomic,strong) UIViewController * viewController;
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,weak) UIView * blackMask;
 @property(nonatomic,weak) UIButton * doneButton;

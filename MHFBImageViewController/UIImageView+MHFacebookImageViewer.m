@@ -12,9 +12,16 @@
 
 @interface UIImageView()<UITabBarControllerDelegate>
 
+@property (nonatomic, retain) UINavigationController *presentingViewController;
+
 @end
 
 @implementation UIImageView (MHFacebookImageViewer)
+
+
+UINavigationController *_presentingViewController;
+
+
 
 - (void) setupImageViewer {
     [self setupImageViewerWithCompletionOnOpen:nil onClose:nil];
@@ -66,12 +73,15 @@
     imageBrowser.closingBlock = gestureRecognizer.closingBlock;
     imageBrowser.imageDatasource = gestureRecognizer.imageDatasource;
     imageBrowser.initialIndex = gestureRecognizer.initialIndex;
-    if(self.image)
-        [imageBrowser presentFromRootViewController];
+    [imageBrowser presentFromViewController:_presentingViewController];
 }
 
 - (void) dealloc {
     
+}
+
+- (void) setPresentingViewController:(UINavigationController *)presentingViewController {
+    _presentingViewController = presentingViewController;
 }
 
 #pragma mark Removal

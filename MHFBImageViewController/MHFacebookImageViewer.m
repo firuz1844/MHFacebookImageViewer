@@ -58,12 +58,12 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 
 @implementation MHFacebookImageViewer
 
-@synthesize rootViewController = _rootViewController;
 @synthesize imageURL = _imageURL;
 @synthesize openingBlock = _openingBlock;
 @synthesize closingBlock = _closingBlock;
 @synthesize senderView = _senderView;
 @synthesize initialIndex = _initialIndex;
+@synthesize presentingViewController = _presentingViewController;
 
 - (void)viewDidLoad
 {
@@ -149,10 +149,10 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     imageViewerCell.backgroundColor = [UIColor clearColor];
     imageViewerCell.originalFrameRelativeToScreen = _originalFrameRelativeToScreen;
     imageViewerCell.viewController = self;
-    imageViewerCell.collectionView = collectionView;
-    
+    imageViewerCell.presentingViewController = _presentingViewController;
+
+    imageViewerCell.collectionView = collectionView;    
     imageViewerCell.blackMask = _blackMask;
-    imageViewerCell.rootViewController = _rootViewController;
     imageViewerCell.closingBlock = _closingBlock;
     imageViewerCell.openingBlock = _openingBlock;
     imageViewerCell.superView = _senderView.superview;
@@ -181,50 +181,29 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 }
 
 #pragma mark - Show
-- (void)presentFromRootViewController
-{
-    _rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    _rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
-    _rootViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    
-    [_rootViewController presentViewController:self animated:NO completion:^{}];
-    //    [self presentFromViewController:rootViewController];
-}
-
-//- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-//{
-//    return _rootViewController.interfaceOrientation;
-//}
-
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     NSLog(@"Rotate MHF");
 }
 
-//-(BOOL)shouldAutorotate
-//{
-//    return YES;
-//}
-//
-//-(NSUInteger)supportedInterfaceOrientations
-//{
-//    return UIInterfaceOrientationMaskLandscape | UIInterfaceOrientationMaskPortrait;
-//}
-
-- (void)presentFromViewController:(UIViewController *)controller
+- (void)presentFromViewController:(UINavigationController*)controller
 {
-    _rootViewController = controller;
-    [[[[UIApplication sharedApplication]windows]objectAtIndex:0]addSubview:self.view];
-    [controller addChildViewController:self];
-    [self didMoveToParentViewController:controller];
+    if (controller) {
+        _presentingViewController= controller;
+    } else {
+        _presentingViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    }
+    _presentingViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    _presentingViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    
+    [_presentingViewController presentViewController:self animated:NO completion:^{}];
 }
 
 - (void) dealloc {
-    _rootViewController = nil;
+    _presentingViewController = nil;
     _imageURL = nil;
     _senderView = nil;
     _imageDatasource = nil;
-    
 }
 
 @end
