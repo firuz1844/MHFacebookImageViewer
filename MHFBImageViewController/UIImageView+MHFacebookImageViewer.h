@@ -21,6 +21,4 @@
 - (void) setupImageViewerWithDatasource:(id<MHFacebookImageViewerDatasource>)imageDatasource initialIndex:(NSInteger)initialIndex onOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close;
 - (void)removeImageViewer;
 
-- (void) setPresentingViewController:(UINavigationController *)presentingViewController;
-
 @end

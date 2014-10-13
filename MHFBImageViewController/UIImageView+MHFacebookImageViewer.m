@@ -12,15 +12,9 @@
 
 @interface UIImageView()<UITabBarControllerDelegate>
 
-@property (nonatomic, retain) UINavigationController *presentingViewController;
-
 @end
 
 @implementation UIImageView (MHFacebookImageViewer)
-
-
-UINavigationController *_presentingViewController;
-
 
 
 - (void) setupImageViewer {
@@ -51,7 +45,11 @@ UINavigationController *_presentingViewController;
     [self setupImageViewerWithDatasource:imageDatasource initialIndex:0 onOpen:open onClose:close];
 }
 
-- (void) setupImageViewerWithDatasource:(id<MHFacebookImageViewerDatasource>)imageDatasource initialIndex:(NSInteger)initialIndex onOpen:(MHFacebookImageViewerOpeningBlock)open onClose:(MHFacebookImageViewerClosingBlock)close{
+- (void) setupImageViewerWithDatasource:(id<MHFacebookImageViewerDatasource>)imageDatasource
+                           initialIndex:(NSInteger)initialIndex
+                                 onOpen:(MHFacebookImageViewerOpeningBlock)open
+                                onClose:(MHFacebookImageViewerClosingBlock)close
+{
     self.userInteractionEnabled = YES;
     MHFacebookImageViewerTapGestureRecognizer *  tapGesture = [[MHFacebookImageViewerTapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
     tapGesture.imageDatasource = imageDatasource;
@@ -66,22 +64,18 @@ UINavigationController *_presentingViewController;
 #pragma mark - Handle Tap
 - (void) didTap:(MHFacebookImageViewerTapGestureRecognizer*)gestureRecognizer {
     
-    MHFacebookImageViewer * imageBrowser = [[MHFacebookImageViewer alloc]init];
+    MHFacebookImageViewer * imageBrowser = [[MHFacebookImageViewer alloc] init];
     imageBrowser.senderView = self;
     imageBrowser.imageURL = gestureRecognizer.imageURL;
     imageBrowser.openingBlock = gestureRecognizer.openingBlock;
     imageBrowser.closingBlock = gestureRecognizer.closingBlock;
     imageBrowser.imageDatasource = gestureRecognizer.imageDatasource;
     imageBrowser.initialIndex = gestureRecognizer.initialIndex;
-    [imageBrowser presentFromViewController:_presentingViewController];
+    [imageBrowser presentFromViewController:nil];
 }
 
 - (void) dealloc {
     
-}
-
-- (void) setPresentingViewController:(UINavigationController *)presentingViewController {
-    _presentingViewController = presentingViewController;
 }
 
 #pragma mark Removal

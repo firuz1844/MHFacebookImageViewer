@@ -186,17 +186,16 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     NSLog(@"Rotate MHF");
 }
 
-- (void)presentFromViewController:(UINavigationController*)controller
+- (void)presentFromViewController:(UIViewController*)controller
 {
     if (controller) {
-        _presentingViewController= controller;
+        _presentingViewController = controller;
     } else {
         _presentingViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     }
     _presentingViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
     _presentingViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    
-    [_presentingViewController presentViewController:self animated:NO completion:^{}];
+    [_presentingViewController presentViewController:self animated:NO completion:nil];
 }
 
 - (void) dealloc {

@@ -57,7 +57,7 @@
     _defaultImage = defaultImage;
     
     
-    _senderView.alpha = 0.0f;
+//    _senderView.alpha = 0.0f;
     if(!__imageView){
         __imageView = [[UIImageView alloc]init];
         [__scrollView addSubview:__imageView];
@@ -139,13 +139,13 @@
 #pragma mark - Handle Panning Activity
 - (void) gestureRecognizerDidPan:(UIPanGestureRecognizer*)panGesture {
     if(__scrollView.zoomScale != 1.0f || _isAnimating)return;
-    if(_imageIndex==_initialIndex){
-        if(_senderView.alpha!=0.0f)
-            _senderView.alpha = 0.0f;
-    }else {
-        if(_senderView.alpha!=1.0f)
-            _senderView.alpha = 1.0f;
-    }
+//    if(_imageIndex==_initialIndex){
+//        if(_senderView.alpha!=0.0f)
+//            _senderView.alpha = 0.0f;
+//    }else {
+//        if(_senderView.alpha!=1.0f)
+//            _senderView.alpha = 1.0f;
+//    }
     // Hide the Done Button
     [self hideDoneButton];
     __scrollView.bounces = NO;
@@ -208,6 +208,7 @@
             if (finished) {
                 if (![_viewController isKindOfClass:[self class]]) {
                     [_viewController dismissViewControllerAnimated:NO completion:nil];
+                    _closingBlock(_imageIndex);
                 }
             }
         }];
@@ -300,6 +301,8 @@
 
 #pragma mark - Showing of Done Button if ever Zoom Scale is equal to 1
 - (void)didSingleTap:(UITapGestureRecognizer*)recognizer {
+    [self dismissViewController];
+    
     if(_doneButton.superview){
         [self hideDoneButton];
     }else {
