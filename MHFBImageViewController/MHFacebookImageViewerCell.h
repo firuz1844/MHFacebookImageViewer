@@ -14,7 +14,6 @@ typedef void (^MHFacebookImageViewerClosingBlock)(int);
 
 @interface MHFacebookImageViewerCell : UICollectionViewCell <UIGestureRecognizerDelegate,UIScrollViewDelegate>{
     UIImageView * __imageView;
-    UIScrollView * __scrollView;
     NSMutableArray *_gestures;
     CGPoint _panOrigin;
     BOOL _isAnimating;
@@ -26,6 +25,7 @@ typedef void (^MHFacebookImageViewerClosingBlock)(int);
 @property(nonatomic,strong) UIViewController * presentingViewController;
 @property(nonatomic,strong) UIViewController * viewController;
 @property(nonatomic,weak) UICollectionView *collectionView;
+@property (nonatomic, retain) UIScrollView * __scrollView;
 @property(nonatomic,weak) UIView * blackMask;
 @property(nonatomic,weak) UIButton * doneButton;
 @property(nonatomic,weak) UIImageView * senderView;

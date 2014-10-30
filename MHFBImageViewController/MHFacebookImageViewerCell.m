@@ -43,10 +43,10 @@
 - (void) loadAllRequiredViews{
     
     CGRect frame = [UIScreen mainScreen].bounds;
-    __scrollView = [[UIScrollView alloc]initWithFrame:frame];
-    __scrollView.delegate = self;
-    __scrollView.backgroundColor = [UIColor clearColor];
-    [self addSubview:__scrollView];
+    ___scrollView = [[UIScrollView alloc]initWithFrame:frame];
+    ___scrollView.delegate = self;
+    ___scrollView.backgroundColor = [UIColor clearColor];
+    [self addSubview:___scrollView];
     [_doneButton addTarget:self
                     action:@selector(close:)
           forControlEvents:UIControlEventTouchUpInside];
@@ -60,12 +60,12 @@
 //    _senderView.alpha = 0.0f;
     if(!__imageView){
         __imageView = [[UIImageView alloc]init];
-        [__scrollView addSubview:__imageView];
+        [___scrollView addSubview:__imageView];
         __imageView.contentMode = UIViewContentModeScaleAspectFill;
     }
     __block UIImageView * _imageViewInTheBlock = __imageView;
     __block MHFacebookImageViewerCell * _justMeInsideTheBlock = self;
-    __block UIScrollView * _scrollViewInsideBlock = __scrollView;
+    __block UIScrollView * _scrollViewInsideBlock = ___scrollView;
     
     [__imageView setImageWithURLRequest:[NSURLRequest requestWithURL:imageURL] placeholderImage:defaultImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [_scrollViewInsideBlock setZoomScale:1.0f animated:YES];
@@ -117,7 +117,7 @@
 
 # pragma mark - Avoid Unwanted Horizontal Gesture
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
-    CGPoint translation = [panGestureRecognizer translationInView:__scrollView];
+    CGPoint translation = [panGestureRecognizer translationInView:___scrollView];
     return fabs(translation.y) > fabs(translation.x) ;
 }
 
@@ -138,7 +138,7 @@
 
 #pragma mark - Handle Panning Activity
 - (void) gestureRecognizerDidPan:(UIPanGestureRecognizer*)panGesture {
-    if(__scrollView.zoomScale != 1.0f || _isAnimating)return;
+    if(___scrollView.zoomScale != 1.0f || _isAnimating)return;
 //    if(_imageIndex==_initialIndex){
 //        if(_senderView.alpha!=0.0f)
 //            _senderView.alpha = 0.0f;
@@ -148,9 +148,9 @@
 //    }
     // Hide the Done Button
     [self hideDoneButton];
-    __scrollView.bounces = NO;
+    ___scrollView.bounces = NO;
     CGSize windowSize = _blackMask.bounds.size;
-    CGPoint currentPoint = [panGesture translationInView:__scrollView];
+    CGPoint currentPoint = [panGesture translationInView:___scrollView];
     CGFloat y = currentPoint.y + _panOrigin.y;
     CGRect frame = __imageView.frame;
     frame.origin.y = y;
@@ -160,7 +160,7 @@
     CGFloat yDiff = abs((y + __imageView.frame.size.height/2) - windowSize.height/2);
     _blackMask.alpha = MAX(kMaxBlackMaskAlpha - yDiff/(windowSize.height/0.5),kMinBlackMaskAlpha);
     
-    if ((panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) && __scrollView.zoomScale == 1.0f) {
+    if ((panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) && ___scrollView.zoomScale == 1.0f) {
         
         if(_blackMask.alpha < kMaxBlackMaskAlpha - kDismissGestureSensitivity * 0.02) {
             [self dismissViewController];
@@ -272,31 +272,31 @@
     UITapGestureRecognizer *twoFingerTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTwoFingerTap:)];
     twoFingerTapGesture.numberOfTapsRequired = 1;
     twoFingerTapGesture.numberOfTouchesRequired = 2;
-    [__scrollView addGestureRecognizer:twoFingerTapGesture];
+    [___scrollView addGestureRecognizer:twoFingerTapGesture];
     
     UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didSingleTap:)];
     singleTapRecognizer.numberOfTapsRequired = 1;
     singleTapRecognizer.numberOfTouchesRequired = 1;
-    [__scrollView addGestureRecognizer:singleTapRecognizer];
+    [___scrollView addGestureRecognizer:singleTapRecognizer];
     
     UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDobleTap:)];
     doubleTapRecognizer.numberOfTapsRequired = 2;
     doubleTapRecognizer.numberOfTouchesRequired = 1;
-    [__scrollView addGestureRecognizer:doubleTapRecognizer];
+    [___scrollView addGestureRecognizer:doubleTapRecognizer];
     
     [singleTapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
     
-    __scrollView.minimumZoomScale = kMinImageScale;
-    __scrollView.maximumZoomScale = kMaxImageScale;
-    __scrollView.zoomScale = 1;
+    ___scrollView.minimumZoomScale = kMinImageScale;
+    ___scrollView.maximumZoomScale = kMaxImageScale;
+    ___scrollView.zoomScale = 1;
     [self centerScrollViewContents];
 }
 
 #pragma mark - For Zooming
 - (void)didTwoFingerTap:(UITapGestureRecognizer*)recognizer {
-    CGFloat newZoomScale = __scrollView.zoomScale / 1.5f;
-    newZoomScale = MAX(newZoomScale, __scrollView.minimumZoomScale);
-    [__scrollView setZoomScale:newZoomScale animated:YES];
+    CGFloat newZoomScale = ___scrollView.zoomScale / 1.5f;
+    newZoomScale = MAX(newZoomScale, ___scrollView.minimumZoomScale);
+    [___scrollView setZoomScale:newZoomScale animated:YES];
 }
 
 #pragma mark - Showing of Done Button if ever Zoom Scale is equal to 1
@@ -306,7 +306,7 @@
     if(_doneButton.superview){
         [self hideDoneButton];
     }else {
-        if(__scrollView.zoomScale == __scrollView.minimumZoomScale){
+        if(___scrollView.zoomScale == ___scrollView.minimumZoomScale){
             if(!_isDoneAnimating){
                 _isDoneAnimating = YES;
                 [self.viewController.view addSubview:_doneButton];
@@ -318,7 +318,7 @@
                     _isDoneAnimating = NO;
                 }];
             }
-        }else if(__scrollView.zoomScale == __scrollView.maximumZoomScale) {
+        }else if(___scrollView.zoomScale == ___scrollView.maximumZoomScale) {
             CGPoint pointInView = [recognizer locationInView:__imageView];
             [self zoomInZoomOut:pointInView];
         }
@@ -333,15 +333,15 @@
 
 - (void) zoomInZoomOut:(CGPoint)point {
     // Check if current Zoom Scale is greater than half of max scale then reduce zoom and vice versa
-    CGFloat newZoomScale = __scrollView.zoomScale > (__scrollView.maximumZoomScale/2)?__scrollView.minimumZoomScale:__scrollView.maximumZoomScale;
+    CGFloat newZoomScale = ___scrollView.zoomScale > (___scrollView.maximumZoomScale/2)?___scrollView.minimumZoomScale:___scrollView.maximumZoomScale;
     
-    CGSize scrollViewSize = __scrollView.bounds.size;
+    CGSize scrollViewSize = ___scrollView.bounds.size;
     CGFloat w = scrollViewSize.width / newZoomScale;
     CGFloat h = scrollViewSize.height / newZoomScale;
     CGFloat x = point.x - (w / 2.0f);
     CGFloat y = point.y - (h / 2.0f);
     CGRect rectToZoomTo = CGRectMake(x, y, w, h);
-    [__scrollView zoomToRect:rectToZoomTo animated:YES];
+    [___scrollView zoomToRect:rectToZoomTo animated:YES];
 }
 
 #pragma mark - Hide the Done Button

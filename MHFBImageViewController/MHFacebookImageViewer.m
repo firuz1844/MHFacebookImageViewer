@@ -27,7 +27,7 @@
 
 ///1 - maximum sensitive, 10 - minimum sensitive
 NSInteger kDismissGestureSensitivity = 3;
-CGFloat kMaxBlackMaskAlpha = 0.7f;
+CGFloat kMaxBlackMaskAlpha = 0.95f;
 CGFloat kMinBlackMaskAlpha = 0.3f;
 CGFloat kMaxImageScale = 2.5f;
 CGFloat kMinImageScale = 1.0f;
@@ -86,7 +86,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     flowLayout.minimumLineSpacing = 0;
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     
-    _collectionView = [[UICollectionView alloc] initWithFrame:windowBounds collectionViewLayout:flowLayout];
+    _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:flowLayout];
     [_collectionView registerClass:[MHFacebookImageViewerCell class] forCellWithReuseIdentifier:cellID];
     
     [self.view addSubview:_collectionView];
@@ -97,12 +97,19 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     _collectionView.backgroundColor = [UIColor clearColor];
     _collectionView.delaysContentTouches = YES;
     [_collectionView setShowsVerticalScrollIndicator:NO];
-    [_collectionView setContentOffset:CGPointMake(0, _initialIndex * windowBounds.size.width)];
+    [_collectionView setShowsHorizontalScrollIndicator:NO];
+    CGFloat width;
+    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) {
+        width = self.view.window.frame.size.width;
+    } else {
+        width = self.view.window.frame.size.height;
+    }
+    [_collectionView setContentOffset:CGPointMake(_initialIndex * width, 0.f)];
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     _blackMask = [[UIView alloc] initWithFrame:windowBounds];
     _blackMask.backgroundColor = [UIColor blackColor];
-    _blackMask.alpha = 0.0f;
+    _blackMask.alpha = kMaxBlackMaskAlpha;
     _blackMask.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [self.view insertSubview:_blackMask atIndex:0];
@@ -133,11 +140,12 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGSize size;
-    if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
-        size = self.view.frame.size;
+    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) {
+        size = self.view.window.frame.size;
     } else {
-        size = CGSizeMake(self.view.frame.size.height, self.view.frame.size.width);
+        size = CGSizeMake(self.view.window.frame.size.height, self.view.window.frame.size.width);
     }
+//    size = CGSizeMake(self.view.frame.size.height - 2, self.view.frame.size.width - 2);
     return size;
 }
 
@@ -168,6 +176,8 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
     } else {
         [imageViewerCell setImageURL:[self.imageDatasource imageURLAtIndex:indexPath.row imageViewer:self] defaultImage:[self.imageDatasource imageDefaultAtIndex:indexPath.row imageViewer:self]imageIndex:indexPath.row];
     }
+    imageViewerCell.__scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
     return imageViewerCell;
 }
 
@@ -184,6 +194,7 @@ static NSString * cellID = @"mhfacebookImageViewerCell";
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     NSLog(@"Rotate MHF");
+    [_collectionView reloadData];
 }
 
 - (void)presentFromViewController:(UIViewController*)controller
