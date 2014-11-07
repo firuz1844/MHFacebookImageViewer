@@ -38,10 +38,17 @@ extern CGFloat kMinImageScale;
 
 @class MHFacebookImageViewer;
 @protocol MHFacebookImageViewerDatasource <NSObject>
+
 @required
+
 - (NSInteger) numberImagesForImageViewer:(MHFacebookImageViewer*) imageViewer;
 - (NSURL*) imageURLAtIndex:(NSInteger)index imageViewer:(MHFacebookImageViewer*) imageViewer;
 - (UIImage*) imageDefaultAtIndex:(NSInteger)index imageViewer:(MHFacebookImageViewer*) imageViewer;
+
+@optional
+
+- (void) MHFacebookImageViwerDidScroll:(CGPoint)contentOffset;
+
 @end
 
 @interface MHFacebookImageViewer : UIViewController
@@ -51,6 +58,7 @@ extern CGFloat kMinImageScale;
 @property (nonatomic,weak) MHFacebookImageViewerClosingBlock closingBlock;
 @property (nonatomic,weak) id<MHFacebookImageViewerDatasource> imageDatasource;
 @property (nonatomic,assign) NSInteger initialIndex;
+@property (nonatomic,assign) NSInteger currentIndex;
 @property (nonatomic, strong) UIViewController *presentingViewController;
 
 

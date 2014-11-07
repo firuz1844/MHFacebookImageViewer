@@ -36,16 +36,25 @@
     self = [super initWithFrame:frame];
     if (self) {
         NSLog(@"NewCell %@", self.description);
+        [self loadAllRequiredViews];
     }
     return self;
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    if ([[UIApplication sharedApplication] statusBarOrientation] != UIInterfaceOrientationPortrait) {
+        __imageView.frame = self.bounds;
+    }
+}
+
 - (void) loadAllRequiredViews{
     
-    CGRect frame = [UIScreen mainScreen].bounds;
+    CGRect frame = self.bounds;
     ___scrollView = [[UIScrollView alloc]initWithFrame:frame];
     ___scrollView.delegate = self;
     ___scrollView.backgroundColor = [UIColor clearColor];
+    ___scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:___scrollView];
     [_doneButton addTarget:self
                     action:@selector(close:)
@@ -56,13 +65,13 @@
     _imageIndex = imageIndex;
     _defaultImage = defaultImage;
     
-    
 //    _senderView.alpha = 0.0f;
     if(!__imageView){
-        __imageView = [[UIImageView alloc]init];
+        __imageView = [[UIImageView alloc]initWithFrame:self.bounds];
         [___scrollView addSubview:__imageView];
         __imageView.contentMode = UIViewContentModeScaleAspectFill;
     }
+
     __block UIImageView * _imageViewInTheBlock = __imageView;
     __block MHFacebookImageViewerCell * _justMeInsideTheBlock = self;
     __block UIScrollView * _scrollViewInsideBlock = ___scrollView;
@@ -302,6 +311,7 @@
 #pragma mark - Showing of Done Button if ever Zoom Scale is equal to 1
 - (void)didSingleTap:(UITapGestureRecognizer*)recognizer {
     [self dismissViewController];
+    return;
     
     if(_doneButton.superview){
         [self hideDoneButton];
